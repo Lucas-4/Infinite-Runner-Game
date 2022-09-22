@@ -33,6 +33,8 @@ class Player {
     }
 
     draw(frame) {
+        ctx.fillStyle = "red";
+        ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
         ctx.drawImage(playerimg, 80 * frame, 0, 58, 80, this.position.x, this.position.y, 58, 80);
     }
 
@@ -152,6 +154,9 @@ function animate() {
         obs.update();
         if ((player.position.x + player.width >= obs.position.x) && player.position.y + player.height >= obs.position.y && (obs.position.x >= player.position.x || obs.position.x + obs.width >= player.position.x)) {
             player.hit = true;
+            ctx.drawImage(bgimg, 0, 0);
+            obs.update();
+            player.update(frame);
             cancelAnimationFrame(id);
             player.setHighestScore();
             ctx.font = "30px Arial"
