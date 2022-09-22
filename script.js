@@ -33,8 +33,6 @@ class Player {
     }
 
     draw(frame) {
-        ctx.fillStyle = "red";
-        ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
         ctx.drawImage(playerimg, 80 * frame, 0, 58, 80, this.position.x, this.position.y, 58, 80);
     }
 
