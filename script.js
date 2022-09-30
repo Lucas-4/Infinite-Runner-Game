@@ -1,16 +1,19 @@
-let canvas = document.querySelector('#canvas');
-let ctx = canvas.getContext("2d");
+const canvas = document.querySelector('#canvas');
+const ctx = canvas.getContext("2d");
 
-let gravity = 0.5;
+const gravity = 0.5;
 
 const playerimg = new Image();
 playerimg.src = 'Cyborg_run.png';
 
 const bgimg = new Image();
 bgimg.src = 'image.png';
+bgimg.onload = () => {
+    canvas.width = bgimg.width;
+    canvas.height = bgimg.height;
+}
 
-canvas.width = bgimg.width;
-canvas.height = bgimg.height;
+
 
 const floor = canvas.height - 80;
 
@@ -67,7 +70,7 @@ class Player {
     }
 }
 
-class Obstacle {
+class Obstacle{
     constructor(x, height) {
         this.width = 40;
         this.height = height;
@@ -91,7 +94,7 @@ class Obstacle {
 
 }
 
-let obstacle = new Array(10);
+const obstacles = new Array(10);
 function start(){
     for (let i = 0; i <= 9; i++) {
         let distvar = 0;
@@ -127,10 +130,12 @@ function start(){
                 break;
         }
         let dist = ((1000 + i * 500) + distvar);
-        obstacle[i] = new Obstacle(dist, height);
+        obstacles[i] = new Obstacle(dist, height);
     }
 }
 start();
+
+
 
 const player = new Player();
 player.setHighestScore();
@@ -144,24 +149,28 @@ function animate() {
         j = 0;
         frame = (frame + 1) % 6;
     }
-    if(obstacle[9].position.x+obstacle[9].width==0){
+    if(obstacles[9].position.x+obstacles[9].width==0){
         start();
     }
+
     player.update(frame);
-    obstacle.forEach(function (obs) {
-        obs.update();
-        if ((player.position.x + player.width >= obs.position.x) && player.position.y + player.height >= obs.position.y && (obs.position.x >= player.position.x || obs.position.x + obs.width >= player.position.x)) {
-            player.hit = true;
-            ctx.drawImage(bgimg, 0, 0);
-            obs.update();
-            player.update(frame);
+    for(let obs of obstacles){
+        if ((player.position.x + player.width >= obs.position.x) && player.position.y + player.height >= obs.position.y && (obs.position.x >= player.position.x || obs.position.x + obs.width >= player.position.x)){
             cancelAnimationFrame(id);
+            player.hit = true;
             player.setHighestScore();
             ctx.font = "30px Arial"
             ctx.fillStyle = "white";
             ctx.fillText("PRESS ENTER TO PLAY AGAIN", canvas.width * 0.2, canvas.height * 0.4);
         }
-    })
+        obs.update();
+    }
+
+
+    // obstacles.forEach(function (obs) {
+        
+    //     }
+    // })
 }
 animate();
 
